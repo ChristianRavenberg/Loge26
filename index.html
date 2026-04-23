@@ -12,11 +12,10 @@
       font-family: Georgia, "Times New Roman", serif;
       color: #f5efe4;
 
-      /* NY BAGGRUND (mere som billedet) */
+      /* BAGGRUNDSBILLEDE */
       background:
-        radial-gradient(circle at 50% 20%, rgba(255, 180, 80, 0.25), transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(0,0,0,0.9), rgba(0,0,0,1)),
-        linear-gradient(180deg, #020202 0%, #080808 100%);
+        linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)),
+        url('assets/bg.png') center center / cover no-repeat fixed;
 
       position: relative;
       overflow: hidden;
@@ -29,20 +28,6 @@
       inset: 0;
       background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
       opacity: 0.15;
-      pointer-events: none;
-    }
-
-    /* "LYS FOR ENDEN AF VEJEN" */
-    body::after {
-      content: "";
-      position: fixed;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 400px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(255,200,120,0.35), transparent 70%);
-      filter: blur(60px);
       pointer-events: none;
     }
 
