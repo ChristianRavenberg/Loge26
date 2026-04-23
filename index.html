@@ -6,165 +6,207 @@
   <title>Logen</title>
 
   <style>
-    body {
+    html, body {
       margin: 0;
-      min-height: 100vh;
-      font-family: Georgia, "Times New Roman", serif;
-      color: #f5efe4;
-
-      /* BAGGRUNDSBILLEDE */
-      background:
-        linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)),
-        url('assets/bg.png') center center / cover no-repeat fixed;
-
-      position: relative;
-      overflow: hidden;
+      min-height: 100%;
     }
 
-    /* RUNER / TEXTURE */
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        linear-gradient(rgba(0,0,0,0.12), rgba(0,0,0,0.28)),
+        url('assets/bg.png') center center / cover no-repeat fixed;
+    }
+
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
-      opacity: 0.15;
+      opacity: 0.08;
       pointer-events: none;
     }
 
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .parchment {
-      max-width: 700px;
-      padding: 40px;
-      background: linear-gradient(180deg, #e6d3a3, #d2bb86);
-      color: #2f2417;
-      border-radius: 12px;
-      box-shadow: 0 0 80px rgba(0,0,0,0.8);
+    .countdown-wrap {
+      position: fixed;
+      left: 50%;
+      bottom: 5.5vh;
+      transform: translateX(-50%);
+      width: min(720px, 88vw);
       text-align: center;
-      border: 1px solid rgba(0,0,0,0.3);
+      z-index: 5;
+      color: #c8963a;
+      text-shadow:
+        0 1px 0 rgba(0,0,0,0.9),
+        0 0 8px rgba(0,0,0,0.7),
+        0 0 16px rgba(0,0,0,0.45);
     }
 
-    h1 {
-      margin-bottom: 30px;
+    .countdown-title {
+      margin: 0 0 8px;
+      font-size: clamp(18px, 2vw, 30px);
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      font-weight: 500;
     }
 
-    .block {
-      margin: 20px 0;
-      line-height: 1.7;
+    .countdown-subtitle {
+      margin: 0 0 18px;
+      font-size: clamp(15px, 1.5vw, 24px);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 400;
     }
 
     .countdown {
-      margin-top: 30px;
-      font-size: 22px;
-      white-space: pre-line;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      align-items: end;
+      max-width: 620px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(200, 150, 58, 0.35);
+      padding-top: 14px;
     }
 
-    .footer {
-      margin-top: 30px;
-      font-size: 20px;
+    .time-box {
+      position: relative;
+      padding: 0 10px;
+    }
+
+    .time-box:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 8%;
+      right: 0;
+      width: 1px;
+      height: 84%;
+      background: rgba(200, 150, 58, 0.35);
+    }
+
+    .time-value {
+      display: block;
+      font-size: clamp(34px, 4.8vw, 74px);
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    .time-unit {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(11px, 1.05vw, 18px);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        background:
+          linear-gradient(rgba(0,0,0,0.12), rgba(0,0,0,0.3)),
+          url('assets/bg.png') center center / cover no-repeat;
+      }
+
+      .countdown-wrap {
+        bottom: 3.8vh;
+        width: 92vw;
+      }
+
+      .countdown-title {
+        margin-bottom: 6px;
+      }
+
+      .countdown-subtitle {
+        margin-bottom: 12px;
+      }
+
+      .countdown {
+        gap: 4px;
+        padding-top: 10px;
+      }
+
+      .time-box {
+        padding: 0 4px;
+      }
+
+      .time-value {
+        font-size: clamp(24px, 8vw, 46px);
+      }
+
+      .time-unit {
+        font-size: clamp(9px, 2.5vw, 12px);
+      }
     }
   </style>
 </head>
-
 <body>
 
-<div class="container">
-  <div class="parchment">
+  <div class="countdown-wrap">
+    <div class="countdown-title">Ceremonien nærmer sig...</div>
+    <div class="countdown-subtitle">Logen forbereder sig...</div>
 
-    <h1>Ærede medlemmer af logen</h1>
-
-    <div class="block">
-      Det er atter blevet tid.<br>
-      Tid til at samles.<br>
-      Tid til at træde ud af det kendte.<br>
-      Tid til at blive sat på prøve.
+    <div class="countdown">
+      <div class="time-box">
+        <span class="time-value" id="days">00</span>
+        <span class="time-unit">Dage</span>
+      </div>
+      <div class="time-box">
+        <span class="time-value" id="hours">00</span>
+        <span class="time-unit">Timer</span>
+      </div>
+      <div class="time-box">
+        <span class="time-value" id="minutes">00</span>
+        <span class="time-unit">Minutter</span>
+      </div>
+      <div class="time-box">
+        <span class="time-value" id="seconds">00</span>
+        <span class="time-unit">Sekunder</span>
+      </div>
     </div>
-
-    <div class="block">
-      Et arrangement er blevet indviet.
-    </div>
-
-    <div class="block">
-      Lokation: Klassificeret<br>
-      Tidspunkt: 16. maj<br>
-      Formål: Kun kendt af de værdige
-    </div>
-
-    <div class="block">
-      Logen har forberedt en række prøvelser.<br>
-      Nogle vil bestå.<br>
-      Andre vil blot overleve.
-    </div>
-
-    <div class="block">
-      Medbring:<br>
-      Mod.<br>
-      Tørst.<br>
-      En vilje til at træffe dårlige beslutninger.
-    </div>
-
-    <div class="block">
-      Yderligere information vil blive frigivet,<br>
-      når tiden er inde.<br>
-      Nedtællingen er begyndt.
-    </div>
-
-    <div class="countdown" id="countdown"></div>
-
-    <div class="block">
-      Indtil da…<br>
-      Forbliv rede.
-    </div>
-
-    <div class="block">
-      Svaghed vil blive observeret.<br>
-      Og husket.
-    </div>
-
-    <div class="block">
-      Overlevelse er ikke garanteret.<br>
-      Tømmermænd er.
-    </div>
-
-    <div class="footer">– Logen –</div>
-
   </div>
-</div>
 
-<script>
-  const unlockDate = new Date('2026-05-09T21:59:00Z');
+  <script>
+    const unlockDate = new Date('2026-05-09T21:59:00Z');
 
-  function updateCountdown() {
-    const now = new Date();
-    const diff = unlockDate - now;
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
 
-    if (diff <= 0) {
-      document.getElementById("countdown").innerText = "Tiden er inde.";
-      return;
+    function pad(value) {
+      return String(value).padStart(2, '0');
     }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
+    function updateCountdown() {
+      const now = new Date();
+      const diff = unlockDate - now;
 
-    document.getElementById("countdown").innerText =
-      `Ceremonien nærmer sig...\n${days}d ${hours}t ${minutes}m ${seconds}s`;
-  }
+      if (diff <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        return;
+      }
 
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
-</script>
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      daysEl.textContent = pad(days);
+      hoursEl.textContent = pad(hours);
+      minutesEl.textContent = pad(minutes);
+      secondsEl.textContent = pad(seconds);
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 
 </body>
 </html>
