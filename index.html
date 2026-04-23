@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logen</title>
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --gold: #c9a96b;
+      --parchment: rgba(214, 193, 154, 0.92);
+      --ink: #2f2417;
+      --shadow: rgba(0, 0, 0, 0.45);
+      --muted: #6b5538;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--bg);
+      color: #f5efe4;
+    }
+
+    body {
+      position: relative;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(84, 56, 17, 0.25), transparent 32%),
+        radial-gradient(circle at 80% 15%, rgba(120, 91, 38, 0.18), transparent 24%),
+        radial-gradient(circle at 50% 75%, rgba(63, 79, 57, 0.16), transparent 26%),
+        linear-gradient(180deg, rgba(7,7,7,0.98) 0%, rgba(17,17,17,0.98) 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 3px 3px, 3px 3px;
+      mix-blend-mode: soft-light;
+    }
+
+    .mist {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 10%, rgba(255,255,255,0.05), transparent 30%),
+        radial-gradient(circle at 30% 90%, rgba(255,255,255,0.03), transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.03), transparent 28%);
+      filter: blur(22px);
+      opacity: 0.65;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .parchment {
+      width: min(820px, 100%);
+      padding: 48px 36px;
+      border-radius: 20px;
+      background:
+        linear-gradient(180deg, rgba(227, 209, 171, 0.96), rgba(205, 183, 141, 0.95));
+      color: var(--ink);
+      box-shadow:
+        0 25px 60px var(--shadow),
+        inset 0 0 35px rgba(115, 78, 33, 0.18),
+        inset 0 0 2px rgba(0,0,0,0.35);
+      border: 1px solid rgba(83, 57, 24, 0.35);
+      position: relative;
+    }
+
+    .parchment::before,
+    .parchment::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 16px;
+      pointer-events: none;
+    }
+
+    .parchment::before {
+      border: 1px solid rgba(101, 72, 29, 0.18);
+    }
+
+    .parchment::after {
+      inset: auto 24px 18px 24px;
+      height: 20px;
+      background: radial-gradient(circle, rgba(80,53,21,0.18), transparent 65%);
+      filter: blur(10px);
+      opacity: 0.8;
+    }
+
+    .sigil {
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 28px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: clamp(28px, 5vw, 44px);
+      color: #2e2012;
+    }
+
+    .content {
+      text-align: center;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.9;
+    }
+
+    .block {
+      margin: 18px 0;
+    }
+
+    .details {
+      margin: 28px 0;
+      font-size: clamp(18px, 2vw, 21px);
+    }
+
+    .details strong {
+      display: inline-block;
+      min-width: 110px;
+    }
+
+    .countdown-wrap {
+      margin-top: 34px;
+      padding-top: 26px;
+      border-top: 1px solid rgba(70, 48, 22, 0.18);
+    }
+
+    .countdown-label {
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(64px, 1fr));
+      gap: 12px;
+      margin: 0 auto;
+      max-width: 520px;
+    }
+
+    .time-box {
+      background: rgba(86, 61, 28, 0.08);
+      border: 1px solid rgba(86, 61, 28, 0.15);
+      border-radius: 14px;
+      padding: 14px 10px;
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.16);
+    }
+
+    .time-value {
+      display: block;
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: bold;
+      line-height: 1.1;
+      color: #2f2315;
+    }
+
+    .time-unit {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .countdown-note {
+      margin-top: 18px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 26px;
+      font-size: 22px;
+    }
+
+    @media (max-width: 640px) {
+      .parchment {
+        padding: 34px 22px;
+      }
+
+      .content {
+        line-height: 1.7;
+      }
+
+      .countdown {
+        grid-template-columns: repeat(2, minmax(90px, 1fr));
+      }
+
+      .details strong {
+        min-width: 0;
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mist"></div>
+
+  <main class="page">
+    <section class="parchment">
+      <div class="sigil">✦ Logen ✦</div>
+      <h1>Ærede medlemmer af logen</h1>
+
+      <div class="content">
+        <div class="block">
+          Det er atter blevet tid.<br>
+          Tid til at samles.<br>
+          Tid til at træde ud af det kendte.<br>
+          Tid til at blive sat på prøve.
+        </div>
+
+        <div class="block">
+          Et arrangement er blevet indviet.
+        </div>
+
+        <div class="details">
+          <div><strong>Lokation:</strong> Klassificeret</div>
+          <div><strong>Tidspunkt:</strong> 16. maj</div>
+          <div><strong>Formål:</strong> Kun kendt af de værdige</div>
+        </div>
+
+        <div class="block">
+          Logen har forberedt en række prøvelser.<br>
+          Nogle vil bestå.<br>
+          Andre vil blot overleve.
+        </div>
+
+        <div class="block">
+          Medbring:<br>
+          Mod.<br>
+          Tørst.<br>
+          En vilje til at træffe dårlige beslutninger.
+        </div>
+
+        <div class="block">
+          Yderligere information vil blive frigivet,<br>
+          når tiden er inde.<br>
+          Nedtællingen er begyndt.
+        </div>
+
+        <div class="countdown-wrap">
+          <div class="countdown-label">Ceremonien åbner om</div>
+          <div class="countdown" id="countdown">
+            <div class="time-box">
+              <span class="time-value" id="days">00</span>
+              <span class="time-unit">Dage</span>
+            </div>
+            <div class="time-box">
+              <span class="time-value" id="hours">00</span>
+              <span class="time-unit">Timer</span>
+            </div>
+            <div class="time-box">
+              <span class="time-value" id="minutes">00</span>
+              <span class="time-unit">Minutter</span>
+            </div>
+            <div class="time-box">
+              <span class="time-value" id="seconds">00</span>
+              <span class="time-unit">Sekunder</span>
+            </div>
+          </div>
+          <div class="countdown-note" id="countdown-note">
+            Forbliv rede.
+          </div>
+        </div>
+
+        <div class="block" style="margin-top: 28px;">
+          Indtil da…<br>
+          Forbliv rede.
+        </div>
+
+        <div class="block">
+          Svaghed vil blive observeret.<br>
+          Og husket.
+        </div>
+
+        <div class="block">
+          Overlevelse er ikke garanteret.<br>
+          Tømmermænd er.
+        </div>
+      </div>
+
+      <div class="footer">– Logen –</div>
+    </section>
+  </main>
+
+  <script>
+    // Unlock-tidspunkt: 9. maj 2026 kl. 23:59 i Danmark.
+    // For at undgå problemer med tidszoner bruges dansk sommertid her (UTC+2),
+    // som svarer til 21:59 UTC.
+    const unlockDate = new Date('2026-05-09T21:59:00Z');
+
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const noteEl = document.getElementById('countdown-note');
+
+    function pad(value) {
+      return String(value).padStart(2, '0');
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = unlockDate - now;
+
+      if (diff <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        noteEl.textContent = 'Tiden er inde.';
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      daysEl.textContent = pad(days);
+      hoursEl.textContent = pad(hours);
+      minutesEl.textContent = pad(minutes);
+      secondsEl.textContent = pad(seconds);
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
