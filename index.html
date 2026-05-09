@@ -1,206 +1,411 @@
 <!DOCTYPE html>
+
 <html lang="da">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Logen</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Logen</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
-      font-family: Georgia, "Times New Roman", serif;
-    }
+html, body {
+height: 100%;
+background: #000;
+font-family: Georgia, “Times New Roman”, serif;
+overflow: hidden;
+}
 
-    .stage {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      overflow: hidden;
-    }
+/* ─── FASE 1 ─────────────────────────────────────── */
+#fase1 {
+position: fixed;
+inset: 0;
+background: #000;
+overflow: hidden;
+transition: opacity 1.5s ease;
+}
+#fase1.hidden { opacity: 0; pointer-events: none; }
 
-    .poster {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      object-position: center center;
-      transform: translateY(-4%);
-      z-index: 1;
-      pointer-events: none;
-      user-select: none;
-    }
+#fase1 .poster {
+position: absolute;
+inset: 0;
+width: 100%;
+height: 100%;
+object-fit: contain;
+object-position: center center;
+transform: translateY(-4%);
+z-index: 1;
+pointer-events: none;
+user-select: none;
+}
 
-    .countdown-wrap {
-      position: absolute;
-      left: 50%;
-      bottom: 6.2%;
-      transform: translateX(-50%);
-      width: min(78vw, 560px);
-      text-align: center;
-      z-index: 3;
-      color: #c8943a;
-      text-shadow:
-        0 1px 0 rgba(0,0,0,0.95),
-        0 0 8px rgba(0,0,0,0.85),
-        0 0 16px rgba(0,0,0,0.55);
-    }
+#fase1 .countdown-wrap {
+position: absolute;
+left: 50%;
+bottom: 6.2%;
+transform: translateX(-50%);
+width: min(78vw, 560px);
+text-align: center;
+z-index: 3;
+color: #c8943a;
+text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 8px rgba(0,0,0,.85);
+}
 
-    .countdown-title {
-      margin: 0 0 2px;
-      font-size: clamp(13px, 1.2vw, 22px);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      line-height: 1.1;
-    }
+/* ─── FASE 2 ─────────────────────────────────────── */
+#fase2 {
+position: fixed;
+inset: 0;
+overflow-y: auto;
+opacity: 0;
+pointer-events: none;
+transition: opacity 1.5s ease;
+/* Atmosfærisk mørk baggrund */
+background:
+radial-gradient(ellipse 80% 60% at 50% 0%, #3a2208 0%, transparent 65%),
+radial-gradient(ellipse 60% 40% at 20% 80%, #1a0e04 0%, transparent 60%),
+radial-gradient(ellipse 60% 40% at 80% 80%, #1a0e04 0%, transparent 60%),
+#080402;
+}
+#fase2.visible {
+opacity: 1;
+pointer-events: all;
+}
 
-    .countdown-subtitle {
-      margin: 0 0 10px;
-      font-size: clamp(12px, 1.05vw, 18px);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      line-height: 1.1;
-    }
+/* Flimrende lys-effekt øverst */
+#fase2::before {
+content: “”;
+position: fixed;
+top: 0; left: 0; right: 0;
+height: 3px;
+background: linear-gradient(90deg, transparent, #c8943a44, #c8943a88, #c8943a44, transparent);
+animation: flicker 4s infinite;
+z-index: 0;
+}
 
-    .countdown {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      max-width: 500px;
-      margin: 0 auto;
-      padding-top: 10px;
-      border-top: 1px solid rgba(200, 148, 58, 0.28);
-    }
+@keyframes flicker {
+0%,100% { opacity: 0.6; }
+25% { opacity: 1; }
+50% { opacity: 0.4; }
+75% { opacity: 0.9; }
+}
 
-    .time-box {
-      position: relative;
-      padding: 0 6px;
-    }
+/* Stearinlys-gløde i hjørnerne */
+#fase2::after {
+content: “”;
+position: fixed;
+bottom: 140px; left: 5vw;
+width: 80px; height: 120px;
+background: radial-gradient(ellipse at bottom, #c8943a33 0%, transparent 70%);
+animation: glow 3s ease-in-out infinite alternate;
+pointer-events: none;
+}
+@keyframes glow {
+from { opacity: 0.5; transform: scale(1); }
+to   { opacity: 1;   transform: scale(1.1); }
+}
 
-    .time-box:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      top: 8%;
-      right: 0;
-      width: 1px;
-      height: 78%;
-      background: rgba(200, 148, 58, 0.28);
-    }
+.scroll-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 5vh 20px 160px;
+position: relative;
+z-index: 2;
+}
 
-    .time-value {
-      display: block;
-      font-size: clamp(30px, 3.6vw, 58px);
-      line-height: 1;
-      font-weight: 500;
-    }
+/* Pergament */
+.pergament {
+width: min(88vw, 540px);
+position: relative;
+animation: unfurl 1.2s ease-out both;
+}
 
-    .time-unit {
-      display: block;
-      margin-top: 6px;
-      font-size: clamp(10px, 0.95vw, 16px);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
+@keyframes unfurl {
+from { opacity: 0; transform: scaleY(0.85) translateY(-20px); }
+to   { opacity: 1; transform: scaleY(1) translateY(0); }
+}
 
-    @media (max-width: 700px) {
-      .poster {
-        transform: translateY(-8%);
-      }
+/* Pergament top-krølle */
+.pergament::before {
+content: “”;
+display: block;
+height: 18px;
+background:
+linear-gradient(180deg, #8a6030 0%, #c8a96e 100%);
+border-radius: 3px 3px 0 0;
+box-shadow: 0 -2px 8px rgba(0,0,0,0.8), inset 0 -2px 4px rgba(0,0,0,0.3);
+}
+/* Pergament bund-krølle */
+.pergament::after {
+content: “”;
+display: block;
+height: 18px;
+background:
+linear-gradient(0deg, #8a6030 0%, #c8a96e 100%);
+border-radius: 0 0 3px 3px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.9), inset 0 2px 4px rgba(0,0,0,0.3);
+}
 
-      .countdown-wrap {
-        bottom: 10.8%;
-        width: 88vw;
-      }
+.pergament-inner {
+background:
+url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘200’ height=‘200’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘200’ height=‘200’ filter=‘url(%23n)’ opacity=‘0.06’/%3E%3C/svg%3E”),
+linear-gradient(160deg, #d4b47a 0%, #c8a96e 30%, #bf9e62 60%, #c8a96e 80%, #caa96a 100%);
+padding: 28px 32px;
+text-align: center;
+color: #1e1005;
+line-height: 1.7;
+box-shadow:
+inset 0 0 60px rgba(100,60,10,0.25),
+inset 0 0 8px rgba(0,0,0,0.15);
+}
 
-      .countdown-title {
-        font-size: 10px;
-      }
+.perg-title {
+font-size: clamp(13px, 3.5vw, 19px);
+font-weight: bold;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+margin-bottom: 10px;
+text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+}
 
-      .countdown-subtitle {
-        font-size: 9px;
-        margin-bottom: 8px;
-      }
+.perg-div {
+color: #7a5520;
+margin: 10px 0;
+font-size: 13px;
+}
 
-      .time-value {
-        font-size: 24px;
-      }
+.perg-p {
+font-size: clamp(11px, 3vw, 14px);
+margin: 3px 0;
+}
 
-      .time-unit {
-        font-size: 9px;
-      }
-    }
-  </style>
+.perg-bold {
+font-weight: bold;
+font-size: clamp(12px, 3.2vw, 15px);
+margin: 5px 0;
+}
+
+.perg-sign {
+font-size: clamp(12px, 3vw, 15px);
+letter-spacing: 0.2em;
+margin-top: 14px;
+}
+
+/* Dekorative rune-streger i siderne */
+.perg-rune-l, .perg-rune-r {
+position: absolute;
+top: 18px; bottom: 18px;
+width: 14px;
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+align-items: center;
+color: rgba(100,60,10,0.35);
+font-size: 11px;
+pointer-events: none;
+}
+.perg-rune-l { left: 8px; }
+.perg-rune-r { right: 8px; }
+
+/* ─── NEDTÆLLING (fælles stil) ───────────────────── */
+.countdown-wrap {
+text-align: center;
+color: #c8943a;
+}
+
+.countdown-title {
+margin: 0 0 2px;
+font-size: clamp(11px, 3vw, 18px);
+letter-spacing: 0.05em;
+text-transform: uppercase;
+}
+.countdown-subtitle {
+margin: 0 0 10px;
+font-size: clamp(10px, 2.5vw, 15px);
+letter-spacing: 0.04em;
+text-transform: uppercase;
+opacity: 0.8;
+}
+.countdown {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+max-width: 500px;
+margin: 0 auto;
+padding-top: 10px;
+border-top: 1px solid rgba(200,148,58,0.28);
+}
+.time-box {
+position: relative;
+padding: 0 6px;
+}
+.time-box:not(:last-child)::after {
+content: “”;
+position: absolute;
+top: 8%; right: 0;
+width: 1px; height: 78%;
+background: rgba(200,148,58,0.28);
+}
+.time-value {
+display: block;
+font-size: clamp(28px, 7vw, 54px);
+line-height: 1;
+font-weight: 500;
+text-shadow: 0 0 20px rgba(200,148,58,0.4);
+}
+.time-unit {
+display: block;
+margin-top: 6px;
+font-size: clamp(9px, 2vw, 14px);
+text-transform: uppercase;
+letter-spacing: 0.08em;
+}
+
+/* Fase 1 nedtælling (samme som original) */
+#fase1 .countdown-wrap {
+text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 8px rgba(0,0,0,.85), 0 0 16px rgba(0,0,0,.55);
+}
+
+/* Fase 2 nedtælling — fast i bunden */
+#f2-countdown {
+position: fixed;
+left: 0; right: 0;
+bottom: 0;
+background: linear-gradient(0deg, #000 70%, transparent);
+padding: 18px 20px 24px;
+z-index: 10;
+text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 12px rgba(0,0,0,.9);
+}
+
+@media (max-width: 700px) {
+#fase1 .poster { transform: translateY(-8%); }
+#fase1 .countdown-wrap { bottom: 10.8%; width: 88vw; }
+}
+</style>
+
 </head>
 <body>
-  <div class="stage">
-    <img class="poster" src="assets/bg.png" alt="Logen" />
 
-    <div class="countdown-wrap">
-      <div class="countdown-title">Ceremonien nærmer sig...</div>
-      <div class="countdown-subtitle">Vigtig information vil blive frigivet ved sidste klokkeslag...</div>
+<!-- ════════════ FASE 1 ════════════ -->
 
-      <div class="countdown">
-        <div class="time-box">
-          <span class="time-value" id="days">00</span>
-          <span class="time-unit">Dage</span>
-        </div>
-        <div class="time-box">
-          <span class="time-value" id="hours">00</span>
-          <span class="time-unit">Timer</span>
-        </div>
-        <div class="time-box">
-          <span class="time-value" id="minutes">00</span>
-          <span class="time-unit">Minutter</span>
-        </div>
-        <div class="time-box">
-          <span class="time-value" id="seconds">00</span>
-          <span class="time-unit">Sekunder</span>
-        </div>
+<div id="fase1">
+  <img class="poster" src="assets/bg.png" alt="Logen" />
+  <div class="countdown-wrap" style="position:absolute;left:50%;bottom:6.2%;transform:translateX(-50%);width:min(78vw,560px);z-index:3;">
+    <div class="countdown-title">Ceremonien nærmer sig...</div>
+    <div class="countdown-subtitle">Vigtig information vil blive frigivet ved sidste klokkeslag...</div>
+    <div class="countdown">
+      <div class="time-box"><span class="time-value" id="f1-days">00</span><span class="time-unit">Dage</span></div>
+      <div class="time-box"><span class="time-value" id="f1-hours">00</span><span class="time-unit">Timer</span></div>
+      <div class="time-box"><span class="time-value" id="f1-minutes">00</span><span class="time-unit">Minutter</span></div>
+      <div class="time-box"><span class="time-value" id="f1-seconds">00</span><span class="time-unit">Sekunder</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ FASE 2 ════════════ -->
+
+<div id="fase2">
+  <div class="scroll-container">
+    <div class="pergament">
+      <div class="perg-rune-l">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
+      <div class="perg-rune-r">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
+      <div class="pergament-inner">
+        <div class="perg-title">Ærede medlemmer af Logen</div>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-p">Timen nærmer sig.</p>
+        <p class="perg-p">Forberedelsens fase er begyndt.</p>
+        <p class="perg-p">De værdige skal stå rede.</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-p">Et nyt budskab er blevet indviet.</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-bold">Lokation: Afsløres ved sidste klokkeslag</p>
+        <p class="perg-p" style="font-size:clamp(10px,2.5vw,12px);color:#5a3a10;margin-bottom:6px;">Destinationen frigives når nedtællingen rammer nul</p>
+        <p class="perg-bold">Afgang: Kl. 0800 — eller vær fortabt</p>
+        <p class="perg-bold">Dresscode: Skjorte og jakkesæt</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-p">Logen tolererer ingen forsinkelse.</p>
+        <p class="perg-p">Den, der ikke står klar ved daggry,</p>
+        <p class="perg-p">efterlades i mørket.</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-p">Medbring:</p>
+        <p class="perg-p">En velpresset skjorte.</p>
+        <p class="perg-p">Et jakkesæt værdigt en herre.</p>
+        <p class="perg-p">Punktlighed.</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-p">Yderligere oplysninger frigives,</p>
+        <p class="perg-p">når Logen finder det passende.</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-p">Forbered jer. Pak jer. Sov let.</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-p">Den uforberedte vil blive bemærket. Og husket.</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-p">Stil er ikke valgfrit.</p>
+        <p class="perg-p">Tømmermænd er stadig garanteret.</p>
+        <div class="perg-div">— ◆ —</div>
+        <p class="perg-sign">— LOGEN —</p>
       </div>
     </div>
   </div>
 
-  <script>
-    const unlockDate = new Date('2026-05-09T21:59:00Z');
+  <div id="f2-countdown" class="countdown-wrap">
+    <div class="countdown-title">Lokation afsløres om...</div>
+    <div class="countdown-subtitle">Destinationen frigives ved sidste klokkeslag...</div>
+    <div class="countdown">
+      <div class="time-box"><span class="time-value" id="f2-days">00</span><span class="time-unit">Dage</span></div>
+      <div class="time-box"><span class="time-value" id="f2-hours">00</span><span class="time-unit">Timer</span></div>
+      <div class="time-box"><span class="time-value" id="f2-minutes">00</span><span class="time-unit">Minutter</span></div>
+      <div class="time-box"><span class="time-value" id="f2-seconds">00</span><span class="time-unit">Sekunder</span></div>
+    </div>
+  </div>
+</div>
 
-    const daysEl = document.getElementById('days');
-    const hoursEl = document.getElementById('hours');
-    const minutesEl = document.getElementById('minutes');
-    const secondsEl = document.getElementById('seconds');
+<script>
+  var FASE1_END = new Date('2026-05-09T21:59:00Z');
+  var FASE2_END = new Date('2026-05-15T14:00:00Z'); // Fredag 15. maj kl. 16:00 dansk tid
 
-    function pad(value) {
-      return String(value).padStart(2, '0');
-    }
+  function pad(n) { return String(n).padStart(2, '0'); }
 
-    function updateCountdown() {
-      const now = new Date();
-      const diff = unlockDate - now;
+  function setCountdown(diff, d, h, m, s) {
+    if (diff <= 0) diff = 0;
+    var total = Math.floor(diff / 1000);
+    d.textContent = pad(Math.floor(total / 86400));
+    h.textContent = pad(Math.floor((total % 86400) / 3600));
+    m.textContent = pad(Math.floor((total % 3600) / 60));
+    s.textContent = pad(total % 60);
+  }
 
-      if (diff <= 0) {
-        daysEl.textContent = '00';
-        hoursEl.textContent = '00';
-        minutesEl.textContent = '00';
-        secondsEl.textContent = '00';
-        return;
+  var f1 = document.getElementById('fase1');
+  var f2 = document.getElementById('fase2');
+  var f1d = document.getElementById('f1-days');
+  var f1h = document.getElementById('f1-hours');
+  var f1m = document.getElementById('f1-minutes');
+  var f1s = document.getElementById('f1-seconds');
+  var f2d = document.getElementById('f2-days');
+  var f2h = document.getElementById('f2-hours');
+  var f2m = document.getElementById('f2-minutes');
+  var f2s = document.getElementById('f2-seconds');
+
+  var switched = false;
+
+  function tick() {
+    var now = new Date();
+    if (now < FASE1_END) {
+      // Fase 1 kører
+      setCountdown(FASE1_END - now, f1d, f1h, f1m, f1s);
+    } else {
+      // Skift til fase 2
+      if (!switched) {
+        switched = true;
+        f1.classList.add('hidden');
+        setTimeout(function() {
+          f2.classList.add('visible');
+        }, 800);
       }
-
-      const totalSeconds = Math.floor(diff / 1000);
-      const days = Math.floor(totalSeconds / 86400);
-      const hours = Math.floor((totalSeconds % 86400) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-
-      daysEl.textContent = pad(days);
-      hoursEl.textContent = pad(hours);
-      minutesEl.textContent = pad(minutes);
-      secondsEl.textContent = pad(seconds);
+      setCountdown(FASE2_END - now, f2d, f2h, f2m, f2s);
     }
+  }
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-  </script>
+  tick();
+  setInterval(tick, 1000);
+</script>
+
 </body>
 </html>
