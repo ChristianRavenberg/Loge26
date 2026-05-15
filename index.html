@@ -6,203 +6,69 @@
 <title>Logen</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #000; font-family: Georgia, "Times New Roman", serif; overflow: hidden; }
 
-  html, body {
-    height: 100%;
-    background: #000;
-    font-family: Georgia, "Times New Roman", serif;
-    overflow: hidden;
-  }
+  .fase { position: fixed; inset: 0; opacity: 0; pointer-events: none; transition: opacity 1.5s ease; }
+  .fase.visible { opacity: 1; pointer-events: all; }
 
-  /* ─── FÆLLES FADE ────────────────────────────────── */
-  .fase {
-    position: fixed;
-    inset: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1.5s ease;
-  }
-  .fase.visible {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  /* ─── FASE 1 ─────────────────────────────────────── */
+  /* FASE 1 */
   #fase1 { background: #000; overflow: hidden; }
-
   #fase1 .poster {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center center;
-    transform: translateY(-4%);
-    z-index: 1;
-    pointer-events: none;
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: contain; object-position: center center;
+    transform: translateY(-4%); z-index: 1; pointer-events: none;
   }
-  #fase1 .cd-wrap {
-    position: absolute;
-    left: 50%;
-    bottom: 6.2%;
-    transform: translateX(-50%);
-    width: min(78vw, 560px);
-    text-align: center;
-    z-index: 3;
-    color: #c8943a;
+  #cd1 {
+    position: absolute; left: 50%; bottom: 6.2%;
+    transform: translateX(-50%); width: min(78vw, 560px);
+    text-align: center; z-index: 3; color: #c8943a;
     text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 8px rgba(0,0,0,.85), 0 0 16px rgba(0,0,0,.55);
   }
 
-  /* ─── FASE 2 & 3 BAGGRUND ────────────────────────── */
-  .fase-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    z-index: 0;
-  }
-  .fase-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(5,5,16,0.55);
-    z-index: 1;
-  }
-
-  /* ─── FASE 2 & 3 SCROLL ──────────────────────────── */
+  /* FASE 2, 3 baggrund */
+  .fase-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: 0; }
+  .fase-overlay { position: absolute; inset: 0; background: rgba(5,5,16,0.55); z-index: 1; }
   #fase2, #fase3 { overflow-y: auto; }
 
-  .scroll-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 4vh 16px 150px;
-    position: relative;
-    z-index: 2;
-  }
+  .scroll-container { display: flex; flex-direction: column; align-items: center; padding: 4vh 16px 150px; position: relative; z-index: 2; }
 
-  /* Pergament */
-  .pergament {
-    width: min(92vw, 500px);
-    position: relative;
-    animation: unfurl 1.2s ease-out both;
-  }
+  .pergament { width: min(92vw, 500px); position: relative; animation: unfurl 1.2s ease-out both; }
   @keyframes unfurl {
     from { opacity: 0; transform: scaleY(0.9) translateY(-16px); }
     to   { opacity: 1; transform: scaleY(1) translateY(0); }
   }
-  .pergament::before {
-    content: "";
-    display: block;
-    height: 14px;
-    background: linear-gradient(180deg, #8a6030, #c8a96e);
-    border-radius: 3px 3px 0 0;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.8);
-  }
-  .pergament::after {
-    content: "";
-    display: block;
-    height: 14px;
-    background: linear-gradient(0deg, #8a6030, #c8a96e);
-    border-radius: 0 0 3px 3px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.9);
-  }
-  .pergament-inner {
-    background: linear-gradient(160deg, #d4b47a 0%, #c8a96e 40%, #bf9e62 70%, #c8a96e 100%);
-    padding: 20px 24px;
-    text-align: center;
-    color: #1e1005;
-    line-height: 1.6;
-    box-shadow: inset 0 0 40px rgba(100,60,10,0.2);
-  }
+  .pergament::before { content: ""; display: block; height: 14px; background: linear-gradient(180deg, #8a6030, #c8a96e); border-radius: 3px 3px 0 0; box-shadow: 0 -2px 8px rgba(0,0,0,0.8); }
+  .pergament::after  { content: ""; display: block; height: 14px; background: linear-gradient(0deg, #8a6030, #c8a96e); border-radius: 0 0 3px 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.9); }
+  .pergament-inner { background: linear-gradient(160deg, #d4b47a 0%, #c8a96e 40%, #bf9e62 70%, #c8a96e 100%); padding: 20px 24px; text-align: center; color: #1e1005; line-height: 1.6; box-shadow: inset 0 0 40px rgba(100,60,10,0.2); }
   .pt  { font-size: clamp(11px,3vw,16px); font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
   .pd  { color: #7a5520; margin: 7px 0; font-size: 11px; }
   .pp  { font-size: clamp(10px,2.6vw,13px); margin: 2px 0; }
   .pb  { font-weight: bold; font-size: clamp(10px,2.8vw,13.5px); margin: 3px 0; }
   .ps  { font-size: clamp(10px,2.6vw,13px); letter-spacing: 0.16em; margin-top: 10px; }
   .phr { border: none; border-top: 1px solid #9a7040; margin: 5px 36px; opacity: 0.5; }
-  .prl, .prr {
-    position: absolute; top: 14px; bottom: 14px; width: 11px;
-    display: flex; flex-direction: column; justify-content: space-around; align-items: center;
-    color: rgba(100,60,10,0.28); font-size: 8px; pointer-events: none;
-  }
-  .prl { left: 5px; }
-  .prr { right: 5px; }
+  .prl, .prr { position: absolute; top: 14px; bottom: 14px; width: 11px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; color: rgba(100,60,10,0.28); font-size: 8px; pointer-events: none; }
+  .prl { left: 5px; } .prr { right: 5px; }
 
-  /* ─── NEDTÆLLING BUND (fase 1,2,3) ──────────────── */
+  /* NEDTÆLLING */
   .cd-wrap { text-align: center; color: #c8943a; }
   .cd-title { margin: 0 0 2px; font-size: clamp(10px,2.8vw,16px); letter-spacing: 0.05em; text-transform: uppercase; }
   .cd-sub   { margin: 0 0 8px; font-size: clamp(9px,2.3vw,13px); letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.8; }
-  .countdown {
-    display: grid; grid-template-columns: repeat(4,1fr);
-    max-width: 460px; margin: 0 auto;
-    padding-top: 8px; border-top: 1px solid rgba(200,148,58,0.28);
-  }
+  .countdown { display: grid; grid-template-columns: repeat(4,1fr); max-width: 460px; margin: 0 auto; padding-top: 8px; border-top: 1px solid rgba(200,148,58,0.28); }
   .tb { position: relative; padding: 0 4px; }
-  .tb:not(:last-child)::after {
-    content: ""; position: absolute; top: 8%; right: 0;
-    width: 1px; height: 78%; background: rgba(200,148,58,0.28);
-  }
+  .tb:not(:last-child)::after { content: ""; position: absolute; top: 8%; right: 0; width: 1px; height: 78%; background: rgba(200,148,58,0.28); }
   .tv { display: block; font-size: clamp(26px,6.5vw,50px); line-height: 1; font-weight: 500; }
   .tu { display: block; margin-top: 4px; font-size: clamp(8px,1.8vw,12px); text-transform: uppercase; letter-spacing: 0.08em; }
+  #cd2, #cd3 { position: fixed; left: 0; right: 0; bottom: 0; background: linear-gradient(0deg, rgba(0,0,0,0.97) 70%, transparent); padding: 14px 20px 20px; z-index: 10; text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 12px rgba(0,0,0,.9); }
 
-  #cd1 {
-    position: absolute; left: 50%; bottom: 6.2%;
-    transform: translateX(-50%);
-    width: min(78vw, 560px); z-index: 3;
-    text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 8px rgba(0,0,0,.85), 0 0 16px rgba(0,0,0,.55);
-  }
-  #cd2, #cd3 {
-    position: fixed; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(0deg, rgba(0,0,0,0.97) 70%, transparent);
-    padding: 14px 20px 20px; z-index: 10;
-    text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 12px rgba(0,0,0,.9);
-  }
-
-  /* ─── FASE 4 ─────────────────────────────────────── */
+  /* FASE 4 */
   #fase4 { background: #000; display: flex; align-items: center; justify-content: center; z-index: 30; }
-  #f4-bg {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; object-position: center top; z-index: 0;
-    filter: brightness(0.3);
-  }
-  #f4-content {
-    position: relative; z-index: 2;
-    text-align: center; padding: 30px 20px;
-    animation: dramain 2s ease-out both;
-    animation-delay: 0.6s;
-  }
-  @keyframes dramain {
-    from { opacity: 0; transform: scale(0.82); }
-    to   { opacity: 1; transform: scale(1); }
-  }
-  .f4l1 {
-    font-family: 'Palatino Linotype','Book Antiqua',Georgia,serif;
-    font-size: clamp(64px,22vw,150px);
-    color: #c8943a; display: block;
-    font-style: italic; line-height: 1.02;
-    text-shadow: 0 0 40px rgba(200,148,58,0.95), 0 0 90px rgba(200,148,58,0.45), 3px 3px 0 rgba(0,0,0,0.95);
-  }
-  .f4l2 {
-    font-family: 'Palatino Linotype','Book Antiqua',Georgia,serif;
-    font-size: clamp(26px,8vw,62px);
-    color: #e8b85a; display: block;
-    font-style: italic; margin-top: 20px;
-    text-shadow: 0 0 25px rgba(200,148,58,0.8), 2px 2px 0 rgba(0,0,0,0.95);
-  }
-  .f4l3 {
-    font-family: Georgia,serif;
-    font-size: clamp(13px,3.8vw,26px);
-    color: rgba(200,148,58,0.85); display: block;
-    text-transform: uppercase; letter-spacing: 0.12em; margin-top: 28px;
-    text-shadow: 0 0 20px rgba(200,148,58,0.5);
-  }
-  .f4d {
-    color: #c8943a; font-size: clamp(18px,5vw,32px);
-    display: block; margin: 12px 0;
-    text-shadow: 0 0 15px rgba(200,148,58,0.7);
-  }
+  #f4-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: 0; filter: brightness(0.3); }
+  #f4-content { position: relative; z-index: 2; text-align: center; padding: 30px 20px; animation: dramain 2s ease-out both; animation-delay: 0.6s; }
+  @keyframes dramain { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: scale(1); } }
+  .f4l1 { font-family: 'Palatino Linotype','Book Antiqua',Georgia,serif; font-size: clamp(64px,22vw,150px); color: #c8943a; display: block; font-style: italic; line-height: 1.02; text-shadow: 0 0 40px rgba(200,148,58,0.95), 0 0 90px rgba(200,148,58,0.45), 3px 3px 0 rgba(0,0,0,0.95); }
+  .f4l2 { font-family: 'Palatino Linotype','Book Antiqua',Georgia,serif; font-size: clamp(26px,8vw,62px); color: #e8b85a; display: block; font-style: italic; margin-top: 20px; text-shadow: 0 0 25px rgba(200,148,58,0.8), 2px 2px 0 rgba(0,0,0,0.95); }
+  .f4l3 { font-family: Georgia,serif; font-size: clamp(13px,3.8vw,26px); color: rgba(200,148,58,0.85); display: block; text-transform: uppercase; letter-spacing: 0.12em; margin-top: 28px; text-shadow: 0 0 20px rgba(200,148,58,0.5); }
+  .f4d  { color: #c8943a; font-size: clamp(18px,5vw,32px); display: block; margin: 12px 0; text-shadow: 0 0 15px rgba(200,148,58,0.7); }
 
   @media (max-width: 700px) {
     #fase1 .poster { transform: translateY(-8%); }
@@ -212,7 +78,7 @@
 </head>
 <body>
 
-<!-- ══ FASE 1 (brugerens egen — vises indtil 9. maj) ══ -->
+<!-- FASE 1: Brugerens original → kørte til 9. maj -->
 <div id="fase1" class="fase visible">
   <img class="poster" src="assets/bg.png" alt="Logen" />
   <div id="cd1" class="cd-wrap">
@@ -227,8 +93,60 @@
   </div>
 </div>
 
-<!-- ══ FASE 2 (befalinger — 9. maj til 15. maj kl. 21) ══ -->
+<!-- FASE 2: Dresscode/info → 9. maj til I AFTEN kl. 21:00 -->
 <div id="fase2" class="fase">
+  <img class="fase-bg" src="assets/bg2.png" alt="" />
+  <div class="fase-overlay"></div>
+  <div class="scroll-container">
+    <div class="pergament">
+      <div class="prl">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
+      <div class="prr">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
+      <div class="pergament-inner">
+        <div class="pt">Timen nærmer sig. Forbered jer.</div>
+        <div class="pd">— ◆ —</div>
+        <p class="pp">Logen har talt. De udvalgte er kaldt.</p>
+        <p class="pp">Ingen undslipper sin skæbne.</p>
+        <div class="pd">— ◆ —</div>
+        <p class="pb">Lokation: Afventer</p>
+        <p class="pb">Afgang: Kl. 0800 — eller vær fortabt</p>
+        <p class="pb">Dresscode: Skjorte og jakkesæt</p>
+        <div class="pd">— ◆ —</div>
+        <p class="pp">Logen tolererer ingen forsinkelse.</p>
+        <p class="pp">Den, der ikke står klar ved daggry,</p>
+        <p class="pp">efterlades i mørket.</p>
+        <div class="pd">— ◆ —</div>
+        <p class="pp">Medbring: En velpresset skjorte.</p>
+        <p class="pp">Et jakkesæt værdigt en herre.</p>
+        <p class="pp">Punktlighed.</p>
+        <div class="pd">— ◆ —</div>
+        <p class="pp">Yderligere oplysninger frigives,</p>
+        <p class="pp">når Logen finder det passende.</p>
+        <div class="pd">— ◆ —</div>
+        <p class="pp">Forbered jer. Pak jer. Sov let.</p>
+        <div class="pd">— ◆ —</div>
+        <p class="pp">Den uforberedte vil blive bemærket. Og husket.</p>
+        <div class="pd">— ◆ —</div>
+        <p class="pp">Stil er ikke valgfrit.</p>
+        <p class="pp">Tømmermænd er stadig garanteret.</p>
+        <hr class="phr"/>
+        <p class="ps">— LOGEN —</p>
+      </div>
+    </div>
+  </div>
+  <div id="cd2" class="cd-wrap">
+    <div class="cd-title">Afgangen nærmer sig...</div>
+    <div class="cd-sub">Den uforberedte efterlades i mørket...</div>
+    <div class="countdown">
+      <div class="tb"><span class="tv" id="f2d">00</span><span class="tu">Dage</span></div>
+      <div class="tb"><span class="tv" id="f2h">00</span><span class="tu">Timer</span></div>
+      <div class="tb"><span class="tv" id="f2m">00</span><span class="tu">Min</span></div>
+      <div class="tb"><span class="tv" id="f2s">00</span><span class="tu">Sek</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FASE 3: Ordenens Befalinger → I AFTEN kl. 21:00 til I MORGEN kl. 09:10 -->
+<div id="fase3" class="fase">
   <img class="fase-bg" src="assets/bg2.png" alt="" />
   <div class="fase-overlay"></div>
   <div class="scroll-container">
@@ -287,62 +205,9 @@
       </div>
     </div>
   </div>
-  <div id="cd2" class="cd-wrap">
+  <div id="cd3" class="cd-wrap">
     <div class="cd-title">Næste befaling frigives om...</div>
     <div class="cd-sub">Bevæg jer mod Terminal 3 — og vent...</div>
-    <div class="countdown">
-      <div class="tb"><span class="tv" id="f2d">00</span><span class="tu">Dage</span></div>
-      <div class="tb"><span class="tv" id="f2h">00</span><span class="tu">Timer</span></div>
-      <div class="tb"><span class="tv" id="f2m">00</span><span class="tu">Min</span></div>
-      <div class="tb"><span class="tv" id="f2s">00</span><span class="tu">Sek</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ FASE 3 (dresscode/info — 15. maj kl. 21 til 16. maj kl. 09:10) ══ -->
-<div id="fase3" class="fase">
-  <img class="fase-bg" src="assets/bg2.png" alt="" />
-  <div class="fase-overlay"></div>
-  <div class="scroll-container">
-    <div class="pergament">
-      <div class="prl">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
-      <div class="prr">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
-      <div class="pergament-inner">
-        <div class="pt">Timen nærmer sig. Forbered jer.</div>
-        <div class="pd">— ◆ —</div>
-        <p class="pp">Logen har talt. De udvalgte er kaldt.</p>
-        <p class="pp">Ingen undslipper sin skæbne.</p>
-        <div class="pd">— ◆ —</div>
-        <p class="pb">Lokation: Afventer</p>
-        <p class="pb">Afgang: Kl. 0800 — eller vær fortabt</p>
-        <p class="pb">Dresscode: Skjorte og jakkesæt</p>
-        <div class="pd">— ◆ —</div>
-        <p class="pp">Logen tolererer ingen forsinkelse.</p>
-        <p class="pp">Den, der ikke står klar ved daggry,</p>
-        <p class="pp">efterlades i mørket.</p>
-        <div class="pd">— ◆ —</div>
-        <p class="pp">Medbring:</p>
-        <p class="pp">En velpresset skjorte.</p>
-        <p class="pp">Et jakkesæt værdigt en herre.</p>
-        <p class="pp">Punktlighed.</p>
-        <div class="pd">— ◆ —</div>
-        <p class="pp">Yderligere oplysninger frigives,</p>
-        <p class="pp">når Logen finder det passende.</p>
-        <div class="pd">— ◆ —</div>
-        <p class="pp">Forbered jer. Pak jer. Sov let.</p>
-        <div class="pd">— ◆ —</div>
-        <p class="pp">Den uforberedte vil blive bemærket. Og husket.</p>
-        <div class="pd">— ◆ —</div>
-        <p class="pp">Stil er ikke valgfrit.</p>
-        <p class="pp">Tømmermænd er stadig garanteret.</p>
-        <hr class="phr"/>
-        <p class="ps">— LOGEN —</p>
-      </div>
-    </div>
-  </div>
-  <div id="cd3" class="cd-wrap">
-    <div class="cd-title">Afgangen nærmer sig...</div>
-    <div class="cd-sub">Den uforberedte efterlades i mørket...</div>
     <div class="countdown">
       <div class="tb"><span class="tv" id="f3d">00</span><span class="tu">Dage</span></div>
       <div class="tb"><span class="tv" id="f3h">00</span><span class="tu">Timer</span></div>
@@ -352,7 +217,7 @@
   </div>
 </div>
 
-<!-- ══ FASE 4 (Klar Parat Start — fra 16. maj kl. 09:10) ══ -->
+<!-- FASE 4: Klar Parat Start → fra I MORGEN kl. 09:10 -->
 <div id="fase4" class="fase">
   <img id="f4-bg" src="assets/bg2.png" alt="" />
   <div id="f4-content">
@@ -368,58 +233,40 @@
 </div>
 
 <script>
-  // ══ TIDSPUNKTER (dansk sommertid = UTC+2) ══
   var T1 = new Date('2026-05-09T21:59:00Z'); // 9. maj kl. 23:59 dansk
-  var T2 = new Date('2026-05-15T19:00:00Z'); // 15. maj kl. 21:00 dansk  ← I AFTEN
-  var T3 = new Date('2026-05-16T07:10:00Z'); // 16. maj kl. 09:10 dansk  ← I MORGEN
+  var T2 = new Date('2026-05-15T19:00:00Z'); // 15. maj kl. 21:00 dansk — I AFTEN
+  var T3 = new Date('2026-05-16T07:10:00Z'); // 16. maj kl. 09:10 dansk — I MORGEN
 
   function pad(n) { return String(n).padStart(2,'0'); }
   function setCD(ms, d, h, m, s) {
-    var t = Math.floor(Math.max(0, ms) / 1000);
-    d.textContent = pad(Math.floor(t / 86400));
-    h.textContent = pad(Math.floor((t % 86400) / 3600));
-    m.textContent = pad(Math.floor((t % 3600) / 60));
-    s.textContent = pad(t % 60);
+    var t = Math.floor(Math.max(0,ms)/1000);
+    d.textContent = pad(Math.floor(t/86400));
+    h.textContent = pad(Math.floor((t%86400)/3600));
+    m.textContent = pad(Math.floor((t%3600)/60));
+    s.textContent = pad(t%60);
   }
 
-  var els = {
-    f1: document.getElementById('fase1'),
-    f2: document.getElementById('fase2'),
-    f3: document.getElementById('fase3'),
-    f4: document.getElementById('fase4'),
-    f1d: document.getElementById('f1d'), f1h: document.getElementById('f1h'),
-    f1m: document.getElementById('f1m'), f1s: document.getElementById('f1s'),
-    f2d: document.getElementById('f2d'), f2h: document.getElementById('f2h'),
-    f2m: document.getElementById('f2m'), f2s: document.getElementById('f2s'),
-    f3d: document.getElementById('f3d'), f3h: document.getElementById('f3h'),
-    f3m: document.getElementById('f3m'), f3s: document.getElementById('f3s'),
-  };
+  var f1 = document.getElementById('fase1');
+  var f2 = document.getElementById('fase2');
+  var f3 = document.getElementById('fase3');
+  var f4 = document.getElementById('fase4');
 
-  var cur = -1;
+  var cur = 0;
   function show(n) {
     if (cur === n) return;
     cur = n;
-    ['f1','f2','f3','f4'].forEach(function(id, i) {
-      var el = els[id] || document.getElementById('fase'+(i+1));
-      if (i+1 === n) { setTimeout(function(){ el.classList.add('visible'); }, 600); }
-      else { el.classList.remove('visible'); }
+    [f1,f2,f3,f4].forEach(function(el,i) {
+      if (i+1 === n) setTimeout(function(){ el.classList.add('visible'); }, 600);
+      else el.classList.remove('visible');
     });
   }
 
   function tick() {
     var now = new Date();
-    if (now < T1) {
-      show(1);
-      setCD(T1 - now, els.f1d, els.f1h, els.f1m, els.f1s);
-    } else if (now < T2) {
-      show(2);
-      setCD(T2 - now, els.f2d, els.f2h, els.f2m, els.f2s);
-    } else if (now < T3) {
-      show(3);
-      setCD(T3 - now, els.f3d, els.f3h, els.f3m, els.f3s);
-    } else {
-      show(4);
-    }
+    if      (now < T1) { show(1); setCD(T1-now, document.getElementById('f1d'), document.getElementById('f1h'), document.getElementById('f1m'), document.getElementById('f1s')); }
+    else if (now < T2) { show(2); setCD(T2-now, document.getElementById('f2d'), document.getElementById('f2h'), document.getElementById('f2m'), document.getElementById('f2s')); }
+    else if (now < T3) { show(3); setCD(T3-now, document.getElementById('f3d'), document.getElementById('f3h'), document.getElementById('f3m'), document.getElementById('f3s')); }
+    else               { show(4); }
   }
 
   tick();
