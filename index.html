@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="da">
 <head>
 <meta charset="UTF-8" />
@@ -8,287 +7,229 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
-height: 100%;
-background: #000;
-font-family: Georgia, “Times New Roman”, serif;
-overflow: hidden;
-}
+  html, body {
+    height: 100%;
+    background: #000;
+    font-family: Georgia, "Times New Roman", serif;
+    overflow: hidden;
+  }
 
-/* ─── FASE 1 ─────────────────────────────────────── */
-#fase1 {
-position: fixed;
-inset: 0;
-background: #000;
-overflow: hidden;
-transition: opacity 1.5s ease;
-}
-#fase1.hidden { opacity: 0; pointer-events: none; }
+  /* ─── FASE 1 ─────────────────────────────────────── */
+  #fase1 {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    overflow: hidden;
+    transition: opacity 1.5s ease;
+  }
+  #fase1.hidden { opacity: 0; pointer-events: none; }
 
-#fase1 .poster {
-position: absolute;
-inset: 0;
-width: 100%;
-height: 100%;
-object-fit: contain;
-object-position: center center;
-transform: translateY(-4%);
-z-index: 1;
-pointer-events: none;
-user-select: none;
-}
+  #fase1 .poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    transform: translateY(-4%);
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+  }
 
-#fase1 .countdown-wrap {
-position: absolute;
-left: 50%;
-bottom: 6.2%;
-transform: translateX(-50%);
-width: min(78vw, 560px);
-text-align: center;
-z-index: 3;
-color: #c8943a;
-text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 8px rgba(0,0,0,.85);
-}
+  #fase1 .countdown-wrap {
+    position: absolute;
+    left: 50%;
+    bottom: 6.2%;
+    transform: translateX(-50%);
+    width: min(78vw, 560px);
+    text-align: center;
+    z-index: 3;
+    color: #c8943a;
+    text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 8px rgba(0,0,0,.85), 0 0 16px rgba(0,0,0,.55);
+  }
 
-/* ─── FASE 2 ─────────────────────────────────────── */
-#fase2 {
-position: fixed;
-inset: 0;
-overflow-y: auto;
-opacity: 0;
-pointer-events: none;
-transition: opacity 1.5s ease;
-/* Atmosfærisk mørk baggrund */
-background:
-radial-gradient(ellipse 80% 60% at 50% 0%, #3a2208 0%, transparent 65%),
-radial-gradient(ellipse 60% 40% at 20% 80%, #1a0e04 0%, transparent 60%),
-radial-gradient(ellipse 60% 40% at 80% 80%, #1a0e04 0%, transparent 60%),
-#080402;
-}
-#fase2.visible {
-opacity: 1;
-pointer-events: all;
-}
+  /* ─── FASE 2 ─────────────────────────────────────── */
+  #fase2 {
+    position: fixed;
+    inset: 0;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+  }
+  #fase2.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
 
-/* Flimrende lys-effekt øverst */
-#fase2::before {
-content: “”;
-position: fixed;
-top: 0; left: 0; right: 0;
-height: 3px;
-background: linear-gradient(90deg, transparent, #c8943a44, #c8943a88, #c8943a44, transparent);
-animation: flicker 4s infinite;
-z-index: 0;
-}
+  /* Baggrundsbillede */
+  #fase2-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    z-index: 0;
+  }
 
-@keyframes flicker {
-0%,100% { opacity: 0.6; }
-25% { opacity: 1; }
-50% { opacity: 0.4; }
-75% { opacity: 0.9; }
-}
+  /* Mørkt overlay oven på billedet så tekst er tydelig */
+  #fase2-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 16, 0.55);
+    z-index: 1;
+  }
 
-/* Stearinlys-gløde i hjørnerne */
-#fase2::after {
-content: “”;
-position: fixed;
-bottom: 140px; left: 5vw;
-width: 80px; height: 120px;
-background: radial-gradient(ellipse at bottom, #c8943a33 0%, transparent 70%);
-animation: glow 3s ease-in-out infinite alternate;
-pointer-events: none;
-}
-@keyframes glow {
-from { opacity: 0.5; transform: scale(1); }
-to   { opacity: 1;   transform: scale(1.1); }
-}
+  .scroll-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5vh 20px 160px;
+    position: relative;
+    z-index: 2;
+  }
 
-.scroll-container {
-display: flex;
-flex-direction: column;
-align-items: center;
-padding: 5vh 20px 160px;
-position: relative;
-z-index: 2;
-}
+  /* Pergament */
+  .pergament {
+    width: min(88vw, 540px);
+    position: relative;
+    animation: unfurl 1.2s ease-out both;
+  }
 
-/* Pergament */
-.pergament {
-width: min(88vw, 540px);
-position: relative;
-animation: unfurl 1.2s ease-out both;
-}
+  @keyframes unfurl {
+    from { opacity: 0; transform: scaleY(0.88) translateY(-20px); }
+    to   { opacity: 1; transform: scaleY(1) translateY(0); }
+  }
 
-@keyframes unfurl {
-from { opacity: 0; transform: scaleY(0.85) translateY(-20px); }
-to   { opacity: 1; transform: scaleY(1) translateY(0); }
-}
+  .pergament::before {
+    content: "";
+    display: block;
+    height: 16px;
+    background: linear-gradient(180deg, #8a6030 0%, #c8a96e 100%);
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.8), inset 0 -2px 4px rgba(0,0,0,0.3);
+  }
+  .pergament::after {
+    content: "";
+    display: block;
+    height: 16px;
+    background: linear-gradient(0deg, #8a6030 0%, #c8a96e 100%);
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.9), inset 0 2px 4px rgba(0,0,0,0.3);
+  }
 
-/* Pergament top-krølle */
-.pergament::before {
-content: “”;
-display: block;
-height: 18px;
-background:
-linear-gradient(180deg, #8a6030 0%, #c8a96e 100%);
-border-radius: 3px 3px 0 0;
-box-shadow: 0 -2px 8px rgba(0,0,0,0.8), inset 0 -2px 4px rgba(0,0,0,0.3);
-}
-/* Pergament bund-krølle */
-.pergament::after {
-content: “”;
-display: block;
-height: 18px;
-background:
-linear-gradient(0deg, #8a6030 0%, #c8a96e 100%);
-border-radius: 0 0 3px 3px;
-box-shadow: 0 4px 12px rgba(0,0,0,0.9), inset 0 2px 4px rgba(0,0,0,0.3);
-}
+  .pergament-inner {
+    background: linear-gradient(160deg, #d4b47a 0%, #c8a96e 40%, #bf9e62 70%, #c8a96e 100%);
+    padding: 24px 28px;
+    text-align: center;
+    color: #1e1005;
+    line-height: 1.65;
+    box-shadow: inset 0 0 50px rgba(100,60,10,0.2);
+  }
 
-.pergament-inner {
-background:
-url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘200’ height=‘200’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘200’ height=‘200’ filter=‘url(%23n)’ opacity=‘0.06’/%3E%3C/svg%3E”),
-linear-gradient(160deg, #d4b47a 0%, #c8a96e 30%, #bf9e62 60%, #c8a96e 80%, #caa96a 100%);
-padding: 28px 32px;
-text-align: center;
-color: #1e1005;
-line-height: 1.7;
-box-shadow:
-inset 0 0 60px rgba(100,60,10,0.25),
-inset 0 0 8px rgba(0,0,0,0.15);
-}
+  .perg-title {
+    font-size: clamp(12px, 3.2vw, 17px);
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .perg-div  { color: #7a5520; margin: 8px 0; font-size: 12px; }
+  .perg-p    { font-size: clamp(11px, 2.8vw, 13.5px); margin: 3px 0; }
+  .perg-bold { font-weight: bold; font-size: clamp(11px, 3vw, 14px); margin: 4px 0; }
+  .perg-sub  { font-size: clamp(10px, 2.5vw, 12px); color: #7a5520; margin: 2px 0; }
+  .perg-sign { font-size: clamp(11px, 2.8vw, 14px); letter-spacing: 0.18em; margin-top: 12px; }
+  .perg-hr   { border: none; border-top: 1px solid #9a7040; margin: 6px 40px; opacity: 0.5; }
 
-.perg-title {
-font-size: clamp(13px, 3.5vw, 19px);
-font-weight: bold;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-margin-bottom: 10px;
-text-shadow: 0 1px 0 rgba(255,255,255,0.2);
-}
+  /* Side-runer */
+  .perg-rune-l, .perg-rune-r {
+    position: absolute;
+    top: 16px; bottom: 16px;
+    width: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    color: rgba(100,60,10,0.3);
+    font-size: 9px;
+    pointer-events: none;
+  }
+  .perg-rune-l { left: 6px; }
+  .perg-rune-r { right: 6px; }
 
-.perg-div {
-color: #7a5520;
-margin: 10px 0;
-font-size: 13px;
-}
+  /* ─── NEDTÆLLING (fælles) ─────────────────────────── */
+  .countdown-wrap { text-align: center; color: #c8943a; }
+  .countdown-title {
+    margin: 0 0 2px;
+    font-size: clamp(11px, 3vw, 18px);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .countdown-subtitle {
+    margin: 0 0 10px;
+    font-size: clamp(10px, 2.5vw, 14px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  .countdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(200,148,58,0.28);
+  }
+  .time-box { position: relative; padding: 0 6px; }
+  .time-box:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 8%; right: 0;
+    width: 1px; height: 78%;
+    background: rgba(200,148,58,0.28);
+  }
+  .time-value {
+    display: block;
+    font-size: clamp(28px, 7vw, 52px);
+    line-height: 1;
+    font-weight: 500;
+    text-shadow: 0 0 20px rgba(200,148,58,0.4);
+  }
+  .time-unit {
+    display: block;
+    margin-top: 5px;
+    font-size: clamp(9px, 2vw, 13px);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
 
-.perg-p {
-font-size: clamp(11px, 3vw, 14px);
-margin: 3px 0;
-}
+  /* Fase 1 nedtælling */
+  #fase1 .time-value { text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 8px rgba(0,0,0,.85); }
 
-.perg-bold {
-font-weight: bold;
-font-size: clamp(12px, 3.2vw, 15px);
-margin: 5px 0;
-}
+  /* Fase 2 nedtælling fast i bunden */
+  #f2-countdown {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.97) 70%, transparent);
+    padding: 16px 20px 22px;
+    z-index: 10;
+    text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 12px rgba(0,0,0,.9);
+  }
 
-.perg-sign {
-font-size: clamp(12px, 3vw, 15px);
-letter-spacing: 0.2em;
-margin-top: 14px;
-}
-
-/* Dekorative rune-streger i siderne */
-.perg-rune-l, .perg-rune-r {
-position: absolute;
-top: 18px; bottom: 18px;
-width: 14px;
-display: flex;
-flex-direction: column;
-justify-content: space-around;
-align-items: center;
-color: rgba(100,60,10,0.35);
-font-size: 11px;
-pointer-events: none;
-}
-.perg-rune-l { left: 8px; }
-.perg-rune-r { right: 8px; }
-
-/* ─── NEDTÆLLING (fælles stil) ───────────────────── */
-.countdown-wrap {
-text-align: center;
-color: #c8943a;
-}
-
-.countdown-title {
-margin: 0 0 2px;
-font-size: clamp(11px, 3vw, 18px);
-letter-spacing: 0.05em;
-text-transform: uppercase;
-}
-.countdown-subtitle {
-margin: 0 0 10px;
-font-size: clamp(10px, 2.5vw, 15px);
-letter-spacing: 0.04em;
-text-transform: uppercase;
-opacity: 0.8;
-}
-.countdown {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-max-width: 500px;
-margin: 0 auto;
-padding-top: 10px;
-border-top: 1px solid rgba(200,148,58,0.28);
-}
-.time-box {
-position: relative;
-padding: 0 6px;
-}
-.time-box:not(:last-child)::after {
-content: “”;
-position: absolute;
-top: 8%; right: 0;
-width: 1px; height: 78%;
-background: rgba(200,148,58,0.28);
-}
-.time-value {
-display: block;
-font-size: clamp(28px, 7vw, 54px);
-line-height: 1;
-font-weight: 500;
-text-shadow: 0 0 20px rgba(200,148,58,0.4);
-}
-.time-unit {
-display: block;
-margin-top: 6px;
-font-size: clamp(9px, 2vw, 14px);
-text-transform: uppercase;
-letter-spacing: 0.08em;
-}
-
-/* Fase 1 nedtælling (samme som original) */
-#fase1 .countdown-wrap {
-text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 8px rgba(0,0,0,.85), 0 0 16px rgba(0,0,0,.55);
-}
-
-/* Fase 2 nedtælling — fast i bunden */
-#f2-countdown {
-position: fixed;
-left: 0; right: 0;
-bottom: 0;
-background: linear-gradient(0deg, #000 70%, transparent);
-padding: 18px 20px 24px;
-z-index: 10;
-text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 12px rgba(0,0,0,.9);
-}
-
-@media (max-width: 700px) {
-#fase1 .poster { transform: translateY(-8%); }
-#fase1 .countdown-wrap { bottom: 10.8%; width: 88vw; }
-}
+  @media (max-width: 700px) {
+    #fase1 .poster { transform: translateY(-8%); }
+    #fase1 .countdown-wrap { bottom: 10.8%; width: 88vw; }
+  }
 </style>
-
 </head>
 <body>
 
 <!-- ════════════ FASE 1 ════════════ -->
-
 <div id="fase1">
   <img class="poster" src="assets/bg.png" alt="Logen" />
-  <div class="countdown-wrap" style="position:absolute;left:50%;bottom:6.2%;transform:translateX(-50%);width:min(78vw,560px);z-index:3;">
+  <div class="countdown-wrap">
     <div class="countdown-title">Ceremonien nærmer sig...</div>
     <div class="countdown-subtitle">Vigtig information vil blive frigivet ved sidste klokkeslag...</div>
     <div class="countdown">
@@ -301,53 +242,82 @@ text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 12px rgba(0,0,0,.9);
 </div>
 
 <!-- ════════════ FASE 2 ════════════ -->
-
 <div id="fase2">
+  <img id="fase2-bg" src="assets/bg2.png" alt="" />
+  <div id="fase2-overlay"></div>
+
   <div class="scroll-container">
     <div class="pergament">
-      <div class="perg-rune-l">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
-      <div class="perg-rune-r">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
+      <div class="perg-rune-l">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
+      <div class="perg-rune-r">◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈ ◇ ◈</div>
       <div class="pergament-inner">
-        <div class="perg-title">Ærede medlemmer af Logen</div>
+
+        <div class="perg-title">Ordenens Befalinger er Udstedt</div>
         <div class="perg-div">— ◆ —</div>
-        <p class="perg-p">Timen nærmer sig.</p>
-        <p class="perg-p">Forberedelsens fase er begyndt.</p>
-        <p class="perg-p">De værdige skal stå rede.</p>
+        <p class="perg-p">Logen har talt. De udvalgte er kaldt.</p>
+        <p class="perg-p">Ingen undslipper sin skæbne.</p>
         <div class="perg-div">— ◆ —</div>
-        <p class="perg-p">Et nyt budskab er blevet indviet.</p>
+
+        <p class="perg-bold">UNIFORMERING — INGEN UNDTAGELSER</p>
+        <p class="perg-p">Jakkesæt. Dertilhørende sko.</p>
+        <p class="perg-p">Pas bæres i inderlommen — altid.</p>
+        <p class="perg-p">Godt humør er ikke valgfrit.</p>
+        <p class="perg-p">Hjemmefra senest kl. 0800</p>
+        <p class="perg-bold">— eller vær fortabt.</p>
         <div class="perg-div">— ◆ —</div>
-        <p class="perg-bold">Lokation: Afsløres ved sidste klokkeslag</p>
-        <p class="perg-p" style="font-size:clamp(10px,2.5vw,12px);color:#5a3a10;margin-bottom:6px;">Destinationen frigives når nedtællingen rammer nul</p>
-        <p class="perg-bold">Afgang: Kl. 0800 — eller vær fortabt</p>
-        <p class="perg-bold">Dresscode: Skjorte og jakkesæt</p>
+
+        <p class="perg-bold">BRODERSKABETS PLIGTER</p>
+
+        <div class="perg-div">◇ BRODER GODT HUMØR — JANNICK ◇</div>
+        <p class="perg-p">Det er Logens kendskab at Broder Jannick</p>
+        <p class="perg-p">besidder en naturlig glæde og smittende lune.</p>
+        <p class="perg-p">Han pålægges at bære broderskabets ånd</p>
+        <p class="perg-bold">og medbringe 3 dåseøl til fællesskabet.</p>
+
+        <div class="perg-div">◇ BRODER DISTRÆT — DANIEL ◇</div>
+        <p class="perg-p">Logen omfavner hans kaos — og kanaliserer det.</p>
+        <p class="perg-bold">To forskellige sokker skal bæres.</p>
+        <p class="perg-p">Han medbringer en tilfældig genstand</p>
+        <p class="perg-p">og fortæller en historie der er værdigen.</p>
+
+        <div class="perg-div">◇ BRODER TID — KRISTIAN ◇</div>
+        <p class="perg-p">Hans kald er højt. Hans ansvar tungt.</p>
+        <p class="perg-bold">Ingen broder fortabes. Ingen forsinker.</p>
+        <p class="perg-p">Punktlighed er hans våben og hans ære.</p>
         <div class="perg-div">— ◆ —</div>
-        <p class="perg-p">Logen tolererer ingen forsinkelse.</p>
-        <p class="perg-p">Den, der ikke står klar ved daggry,</p>
-        <p class="perg-p">efterlades i mørket.</p>
+
+        <p class="perg-bold">FÆRDENS GANG</p>
+        <p class="perg-p">Broder Jannick og Broder Daniel</p>
+        <p class="perg-p">drager hjemmefra i god tid og mødes ved</p>
+        <p class="perg-bold">Vanløse Station — afgang kl. 08:15.</p>
+
+        <p class="perg-p">Den fortabte sjæl Kristian afventes ved</p>
+        <p class="perg-bold">Frederiksberg Metro — kl. 08:25.</p>
         <div class="perg-div">— ◆ —</div>
-        <p class="perg-p">Medbring:</p>
-        <p class="perg-p">En velpresset skjorte.</p>
-        <p class="perg-p">Et jakkesæt værdigt en herre.</p>
-        <p class="perg-p">Punktlighed.</p>
+
+        <p class="perg-p">I metroen: én øl skåles.</p>
+        <p class="perg-p">Broder Distræts genstand præsenteres.</p>
+        <p class="perg-p">Broder Tid holder øje med uret.</p>
         <div class="perg-div">— ◆ —</div>
-        <p class="perg-p">Yderligere oplysninger frigives,</p>
-        <p class="perg-p">når Logen finder det passende.</p>
+
+        <p class="perg-p">Broderskabet ankommer til Lufthavnen.</p>
+        <p class="perg-bold">Bevæg jer mod Terminal 3.</p>
+        <p class="perg-p">En repræsentant fra Logen har plantet</p>
+        <p class="perg-p">en besked. I vil blive fundet.</p>
         <div class="perg-div">— ◆ —</div>
-        <p class="perg-p">Forbered jer. Pak jer. Sov let.</p>
-        <div class="perg-div">— ◆ —</div>
-        <p class="perg-p">Den uforberedte vil blive bemærket. Og husket.</p>
-        <div class="perg-div">— ◆ —</div>
-        <p class="perg-p">Stil er ikke valgfrit.</p>
-        <p class="perg-p">Tømmermænd er stadig garanteret.</p>
-        <div class="perg-div">— ◆ —</div>
+
+        <p class="perg-p">Svaghed observeres. Og huskes.</p>
+        <p class="perg-p">Tømmermænd er garanteret.</p>
+        <hr class="perg-hr"/>
         <p class="perg-sign">— LOGEN —</p>
+
       </div>
     </div>
   </div>
 
   <div id="f2-countdown" class="countdown-wrap">
-    <div class="countdown-title">Lokation afsløres om...</div>
-    <div class="countdown-subtitle">Destinationen frigives ved sidste klokkeslag...</div>
+    <div class="countdown-title">Næste befaling frigives om...</div>
+    <div class="countdown-subtitle">Bevæg jer mod Terminal 3 — og vent...</div>
     <div class="countdown">
       <div class="time-box"><span class="time-value" id="f2-days">00</span><span class="time-unit">Dage</span></div>
       <div class="time-box"><span class="time-value" id="f2-hours">00</span><span class="time-unit">Timer</span></div>
@@ -358,54 +328,47 @@ text-shadow: 0 1px 0 rgba(0,0,0,.95), 0 0 12px rgba(0,0,0,.9);
 </div>
 
 <script>
-  var FASE1_END = new Date('2026-05-09T21:59:00Z');
-  var FASE2_END = new Date('2026-05-15T14:00:00Z'); // Fredag 15. maj kl. 16:00 dansk tid
+  var FASE1_END = new Date('2026-05-09T21:59:00Z'); // 9. maj kl. 23:59 dansk tid
+  var FASE2_END = new Date('2026-05-16T07:10:00Z'); // 16. maj kl. 09:10 dansk tid
 
   function pad(n) { return String(n).padStart(2, '0'); }
 
-  function setCountdown(diff, d, h, m, s) {
-    if (diff <= 0) diff = 0;
-    var total = Math.floor(diff / 1000);
+  function setCD(diff, d, h, m, s) {
+    var total = Math.floor(Math.max(0, diff) / 1000);
     d.textContent = pad(Math.floor(total / 86400));
     h.textContent = pad(Math.floor((total % 86400) / 3600));
     m.textContent = pad(Math.floor((total % 3600) / 60));
     s.textContent = pad(total % 60);
   }
 
-  var f1 = document.getElementById('fase1');
-  var f2 = document.getElementById('fase2');
-  var f1d = document.getElementById('f1-days');
-  var f1h = document.getElementById('f1-hours');
-  var f1m = document.getElementById('f1-minutes');
-  var f1s = document.getElementById('f1-seconds');
-  var f2d = document.getElementById('f2-days');
-  var f2h = document.getElementById('f2-hours');
-  var f2m = document.getElementById('f2-minutes');
-  var f2s = document.getElementById('f2-seconds');
-
+  var f1El  = document.getElementById('fase1');
+  var f2El  = document.getElementById('fase2');
+  var f1d   = document.getElementById('f1-days');
+  var f1h   = document.getElementById('f1-hours');
+  var f1m   = document.getElementById('f1-minutes');
+  var f1s   = document.getElementById('f1-seconds');
+  var f2d   = document.getElementById('f2-days');
+  var f2h   = document.getElementById('f2-hours');
+  var f2m   = document.getElementById('f2-minutes');
+  var f2s   = document.getElementById('f2-seconds');
   var switched = false;
 
   function tick() {
     var now = new Date();
     if (now < FASE1_END) {
-      // Fase 1 kører
-      setCountdown(FASE1_END - now, f1d, f1h, f1m, f1s);
+      setCD(FASE1_END - now, f1d, f1h, f1m, f1s);
     } else {
-      // Skift til fase 2
       if (!switched) {
         switched = true;
-        f1.classList.add('hidden');
-        setTimeout(function() {
-          f2.classList.add('visible');
-        }, 800);
+        f1El.classList.add('hidden');
+        setTimeout(function() { f2El.classList.add('visible'); }, 800);
       }
-      setCountdown(FASE2_END - now, f2d, f2h, f2m, f2s);
+      setCD(FASE2_END - now, f2d, f2h, f2m, f2s);
     }
   }
 
   tick();
   setInterval(tick, 1000);
 </script>
-
 </body>
 </html>
